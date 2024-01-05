@@ -1,50 +1,75 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { addUser } from "../Actions/actions";
+import { addUser } from "../Actions";
+import { useFormik } from "formik";
+
+const initialValues={
+    fname:"",
+    lname:"",
+    email:"",
+    password:""
+
+}
+
 
 const User = ()=>{
-   const [fname,setFname]= useState("")
-   console.log("first Name is",fname)
-   const [lname,setLname]= useState("")
-   const [email,setEmail]= useState("")
-   const [password, setPassword] = useState("")
+   
+   
 
    const dispatch = useDispatch();
 
    const userList = useSelector((state)=>state.userReducer.userList);
+
    console.log("UserList :",userList)
 
+
+   const{values, handleBlur, handleChange,handleSubmit}=useFormik({
+    initialValues:initialValues,
+    onSubmit:(values)=>{
+        console.log("values are :",values)
+    }
+    
+})
+const [userDetails,setUserDetails]= useState({values})
+   console.log("first Name is",userDetails)
    
 
     return(
         <>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <label htmlFor="fname">First Name:</label>
-                <input type="text" id="fname" value={fname}  onChange={(e)=>setFname(e.target.value)}></input>
+                <input type="text" id="fname" name="fname" value={values.fname}  onChange={handleChange}></input>
                 <br></br>
-                {/* <label htmlFor="lname">Last Name:</label>
-                <input type="text" id="lname" required onChange={(e)=>setLname(e.target.value)}></input>
+                <label htmlFor="lname">Last Name:</label>
+                <input type="text" id="lname" name="lname" value={values.lname} required onChange={handleChange}></input>
                 <br></br>
                 <label htmlFor="email">Email</label>
-                <input type="email" id="email" required onChange={(e)=>setEmail(e.target.value)}></input>
+                <input type="email" id="email" name="email" value={values.email} required onChange={handleChange}></input>
                 <br></br>
                 <label htmlFor="pass">Password</label>
-                <input type="password" required onChange={(e)=>setPassword(e.target.value)}></input>
-                <br></br> */}
-                <button onClick={()=>dispatch(addUser(fname))&& addUser("")}>Add User</button>
+                <input type="password" id="pass" name="password"  value={values.password} onChange={handleChange}></input>
+                <br></br>
+                <button type="submit">Submit</button>
+                <button type="submit" onClick={()=>dispatch(addUser(values))}>Add User</button>
             </form>
-            <div>
-                <h2>User Information </h2>
-                <div>
-                {userList.map((listItem)=>{
-                    return(
-                        <div>
-                            <li style={{listStyleType:"none"}} key={listItem.id}>{listItem.userData}</li>
-                        </div>
-                    )
-                })}
-                </div>
-            </div>
+            
+                <h2>User's  Information </h2>
+                <tbody>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                    </tr>
+                    {userList.map((user)=>(
+                        <tr key={user.id}>
+                            <td>{user.userDetails.fname}</td>
+                            <td>{user.userDetails.lname}</td>
+                            <td>{user.userDetails.email}</td>
+                            <td>{user.userDetails.password}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            
             
             
         </>

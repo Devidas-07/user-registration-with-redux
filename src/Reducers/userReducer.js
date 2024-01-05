@@ -8,16 +8,14 @@ const initialUserState={
     console.log("action is",action.payload)
     switch (action.type) {
         case "addUser":
-            const {id, userData}=action.payload
+            const {userDetails}=action.payload
             console.log("action.payload is",action.payload)
+            console.log("user data in addUser switch case",userDetails)
             return{
                 ...state,
                 userList:[
-                    ...state.userList,
-                {
-                    id:id,
-                    userData:userData
-                }
+                    ...state.userList,{userDetails}
+                
             ]
             }
                     
